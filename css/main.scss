@@ -1,0 +1,61 @@
+$dirs: (
+    rows:rows,
+    cols:columns
+);
+$dir:(
+    row:row,
+    col:column
+);
+
+$indexes :12 !default;
+$spacer: 1rem !default;
+$spacers: (
+  0: 0,
+  1: $spacer / 4,
+  2: $spacer / 2,
+  3: $spacer,
+  4: $spacer * 1.5,
+  5: $spacer * 3,
+) !default;
+
+.d-grid{
+    display: grid;
+}
+
+@each $dirKey,$dirValue in $dirs {
+    @for $index from 1 to $indexes+1 {
+        .grid-#{$dirKey}-#{$index}{
+            grid-template-#{$dirValue}: repeat($index,1fr);
+        }
+    }
+}
+
+@each $dirKey,$dirValue in $dir{
+    @for $index from 1 to $indexes+1{
+        .#{$dirKey}-span-#{$index}{
+            grid-#{$dirValue}: auto/span $index 
+        }
+    }
+}
+
+@each $dirKey,$dirValue in $dir {
+    @each $pos in start,end{
+        @for $index from 1 to $indexes+2 {
+            .#{$dirKey}-#{$pos}-#{$index}{
+                grid-#{$dirValue}-#{$pos}: $index;
+            }
+        }
+    }
+}
+
+@for $spacer from 1 to length($spacers){
+    .gap-#{$spacer}{
+        gap:map-get($spacers, $spacer);
+    }
+    @each $dirKey,$dirValue in $dir{
+        .#{$dirKey}-gap-#{$spacer}{
+            #{$dirValue}-gap:map-get($spacers, $spacer);
+        }
+    }
+}
+
